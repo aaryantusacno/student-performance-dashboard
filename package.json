@@ -14,7 +14,6 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@rolldown/binding-win32-x64-msvc": "^1.2.11",
     "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^22.20.4",
     "@types/react": "^19.3.0",
