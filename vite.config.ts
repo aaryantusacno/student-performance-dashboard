@@ -3,8 +3,12 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 
-import siteConfiguration from './.figma/make/site.json'
-
+// Replace static import that fails on Vercel with a hardcoded configuration
+const siteConfiguration = {
+  title: "Student Performance Prediction",
+  description: "An academic mini-project for predicting student final marks.",
+  language: "en"
+}
 
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
