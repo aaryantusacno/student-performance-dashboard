@@ -10,7 +10,7 @@ import os
 
 # Generate a synthetic dataset for the mini-project
 np.random.seed(42)
-num_samples = 500
+num_samples = 1500
 
 attendance = np.random.randint(50, 101, num_samples)
 study_hours = np.random.randint(1, 15, num_samples)

@@ -121,11 +121,11 @@ function Dashboard({ navigate }: { navigate: (page: Page) => void }) {
 }
 
 const fieldData = [
-  ["Attendance Percentage", "Enter attendance percentage", "Enter a value between 0 and 100.", "attendance"],
-  ["Study Hours per Day", "Enter study hours", "Enter a non-negative number.", "hours"],
-  ["Previous Exam Marks", "Enter previous marks", "Use the dataset's defined marks scale.", "previous"],
-  ["Assignment Marks", "Enter assignment marks", "Use the dataset's defined marks scale.", "assignment"],
-  ["Internal Assessment Marks", "Enter internal marks", "Use the dataset's defined marks scale.", "internal"],
+  { label: "Attendance Percentage", placeholder: "Enter attendance percentage", helper: "Enter a value between 0 and 100.", key: "attendance", min: 0, max: 100 },
+  { label: "Study Hours per Day", placeholder: "Enter study hours", helper: "Enter a value between 0 and 24.", key: "hours", min: 0, max: 24 },
+  { label: "Previous Exam Marks", placeholder: "Enter previous marks", helper: "Enter a value between 0 and 100.", key: "previous", min: 0, max: 100 },
+  { label: "Assignment Marks", placeholder: "Enter assignment marks", helper: "Enter a value between 0 and 100.", key: "assignment", min: 0, max: 100 },
+  { label: "Internal Assessment Marks", placeholder: "Enter internal marks", helper: "Enter a value between 0 and 100.", key: "internal", min: 0, max: 100 },
 ];
 
 function PredictPage() {
@@ -143,7 +143,7 @@ function PredictPage() {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (fieldData.some((item) => !values[item[3]])) {
+    if (fieldData.some((item) => !values[item.key])) {
       setState("error");
       return;
     }
@@ -175,7 +175,7 @@ function PredictPage() {
     <div className="predict-grid">
       <Card><SectionTitle title="Student Academic Information" subtitle="Use the exact feature definitions and scales from the trained model."/>
         <form className="form-grid" onSubmit={submit}>
-          {fieldData.map(([label, placeholder, helper, key]) => <label className="field" key={key}><span className="field-label">{label}</span>{React.createElement("input", { type: "number", placeholder, value: values[key] || "", min: 0, "aria-describedby": `${key}-help`, onChange: (e: React.ChangeEvent<HTMLInputElement>) => setValues({ ...values, [key]: e.target.value }) })}<span className="field-help" id={`${key}-help`}>{helper}</span></label>)}
+          {fieldData.map(({ label, placeholder, helper, key, min, max }) => <label className="field" key={key}><span className="field-label">{label}</span>{React.createElement("input", { type: "number", placeholder, value: values[key] || "", min, max, "aria-describedby": `${key}-help`, onChange: (e: React.ChangeEvent<HTMLInputElement>) => setValues({ ...values, [key]: e.target.value }) })}<span className="field-help" id={`${key}-help`}>{helper} (Min: {min}, Max: {max})</span></label>)}
           <div className="form-actions"><Button type="submit" disabled={state === "loading"}>{state === "loading" ? "Predicting..." : "Predict Performance"} <Icon name="spark" size="sm"/></Button><Button variant="secondary" onClick={() => { setValues({}); setState("empty"); setPrediction(null); }}>Reset form</Button></div>
         </form>
       </Card>
@@ -226,7 +226,7 @@ function StudentsPage() {
       .catch(console.error);
   }, []);
 
-  return <><PageHeader title="Students" subtitle="View anonymous academic records used by the application." badge="Connected Dataset"/><Card><SectionTitle title="Student records" subtitle="First 50 records from the synthesized dataset."/>
+  return <><PageHeader title="Students" subtitle="View anonymous academic records used by the application." badge="Connected Dataset"/><Card><SectionTitle title="Student records" subtitle="Showing 50 records from the synthesized dataset of 1500 total records."/>
   {!students ? (
     <div className="empty-state"><div className="empty-icon large"><Icon name="users" size="lg"/></div><div className="heading-md">Loading Records...</div><div className="body-muted">Fetching from the backend.</div><Badge tone="neutral">Please wait</Badge></div>
   ) : (
