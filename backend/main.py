@@ -116,5 +116,5 @@ def get_students():
         raise HTTPException(status_code=404, detail="Dataset not found")
     
     df = pd.read_csv(DATA_PATH)
-    sample = df.head(50).to_dict(orient="records")
+    sample = df.to_dict(orient="records")
     return sample

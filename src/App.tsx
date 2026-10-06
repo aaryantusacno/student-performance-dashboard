@@ -107,7 +107,7 @@ function Dashboard({ navigate }: { navigate: (page: Page) => void }) {
     </div>
     <div className="dashboard-grid">
       <Card className="chart-card large-chart"><SectionTitle title="Student Performance Overview" subtitle={summary ? "Performance dashboard is ready." : "Distribution of final marks will appear after a dataset is connected."} action={<Badge>{summary ? "Live data" : "Empty state"}</Badge>}/>
-        {!analytics ? <EmptyChart/> : <div className="chart-visual bars">{analytics.distribution.counts.map((c: number, i: number) => <span key={i} style={{height: `${(c/Math.max(...analytics.distribution.counts))*100}%`}} title={analytics.distribution.labels[i]}/>)}<div className="chart-axis axis-y">Students</div><div className="chart-axis axis-x">Marks range</div></div>}
+        {!analytics ? <EmptyChart/> : <div className="chart-visual bars">{analytics.distribution.counts.map((c: number, i: number) => <span key={i} style={{height: `${(c/Math.max(...analytics.distribution.counts))*100}%`, position: 'relative'}} title={analytics.distribution.labels[i]}><span style={{position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)', fontSize: '10px', color: 'var(--text-secondary)'}}>{c}</span></span>)}<div className="chart-axis axis-y">Students</div><div className="chart-axis axis-x">Marks range</div></div>}
         {!summary && <div className="chart-empty-note"><Icon name="database" size="sm"/><span>Connect the project dataset to render this chart using actual values.</span></div>}
       </Card>
       <Card className="quick-card"><SectionTitle title="Start a prediction" subtitle="The primary project workflow"/><div className="quick-graphic"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="quick-icon"><Icon name="spark" size="lg"/></div></div><div className="quick-copy">Enter academic inputs and generate an estimate when a trained model is available.</div><Button onClick={() => navigate("Predict Performance")}>Open prediction form <Icon name="arrow" size="sm"/></Button></Card>
@@ -226,7 +226,7 @@ function StudentsPage() {
       .catch(console.error);
   }, []);
 
-  return <><PageHeader title="Students" subtitle="View anonymous academic records used by the application." badge="Connected Dataset"/><Card><SectionTitle title="Student records" subtitle="Showing 50 records from the synthesized dataset of 1500 total records."/>
+  return <><PageHeader title="Students" subtitle="View anonymous academic records used by the application." badge="Connected Dataset"/><Card><SectionTitle title="Student records" subtitle="Showing all 1500 records from the synthesized dataset."/>
   {!students ? (
     <div className="empty-state"><div className="empty-icon large"><Icon name="users" size="lg"/></div><div className="heading-md">Loading Records...</div><div className="body-muted">Fetching from the backend.</div><Badge tone="neutral">Please wait</Badge></div>
   ) : (
@@ -281,9 +281,9 @@ function AnalyticsPage() {
   <div className="analytics-grid">
     {charts.map(([title, subtitle, type]) => <Card className="chart-card" key={title}><SectionTitle title={title} subtitle={subtitle} action={<Badge>{analytics ? "Live data" : "Awaiting data"}</Badge>}/>
     {analytics ? (
-       type === "bars" ? <div className="chart-visual bars">{analytics.distribution.counts.map((c: number, i: number) => <span key={i} style={{height: `${(c/Math.max(...analytics.distribution.counts))*100}%`}} title={analytics.distribution.labels[i]}/>)}<div className="chart-axis axis-y">Students</div><div className="chart-axis axis-x">Marks range</div></div> :
-       type === "scatter" && title.includes("Attendance") ? <div className="chart-visual scatter">{analytics.attendance_vs_marks.map((pt: any, i: number) => <span key={i} style={{left: `${pt.x}%`, bottom: `${pt.y}%`}}/>)}<div className="chart-axis axis-y">Final marks</div><div className="chart-axis axis-x">Attendance %</div></div> :
-       type === "scatter" && title.includes("Study") ? <div className="chart-visual scatter">{analytics.study_vs_marks.map((pt: any, i: number) => <span key={i} style={{left: `${(pt.x/15)*100}%`, bottom: `${pt.y}%`}}/>)}<div className="chart-axis axis-y">Final marks</div><div className="chart-axis axis-x">Study Hours</div></div> :
+       type === "bars" ? <div className="chart-visual bars">{analytics.distribution.counts.map((c: number, i: number) => <span key={i} style={{height: `${(c/Math.max(...analytics.distribution.counts))*100}%`, position: 'relative'}} title={analytics.distribution.labels[i]}><span style={{position: 'absolute', top: '-18px', left: '50%', transform: 'translateX(-50%)', fontSize: '10px', color: 'var(--text-secondary)'}}>{c}</span></span>)}<div className="chart-axis axis-y">Students</div><div className="chart-axis axis-x">Marks range</div></div> :
+       type === "scatter" && title.includes("Attendance") ? <div className="chart-visual scatter">{analytics.attendance_vs_marks.map((pt: any, i: number) => <span key={i} style={{left: `${pt.x}%`, bottom: `${pt.y}%`}}><span style={{position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', fontSize: '8px', color: 'var(--text-tertiary)', pointerEvents: 'none'}}>{pt.y}</span></span>)}<div className="chart-axis axis-y">Final marks</div><div className="chart-axis axis-x">Attendance %</div></div> :
+       type === "scatter" && title.includes("Study") ? <div className="chart-visual scatter">{analytics.study_vs_marks.map((pt: any, i: number) => <span key={i} style={{left: `${(pt.x/15)*100}%`, bottom: `${pt.y}%`}}><span style={{position: 'absolute', top: '-14px', left: '50%', transform: 'translateX(-50%)', fontSize: '8px', color: 'var(--text-tertiary)', pointerEvents: 'none'}}>{pt.y}</span></span>)}<div className="chart-axis axis-y">Final marks</div><div className="chart-axis axis-x">Study Hours</div></div> :
        <EmptyChart type={type}/>
     ) : <EmptyChart type={type}/>}
     </Card>)}
